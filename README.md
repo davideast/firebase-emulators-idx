@@ -2,8 +2,8 @@
 
 - ✅ Firestore
 - ✅ Hosting
+- ✅ Auth
 - ☑️ Data Connect (works but no sample yet)
-- ☑️ Auth (OAuth up next)
 - ◻️ Functions (w/ callable)
 - ◻️ Cloud Storage
 - ◻️ App Hosting
