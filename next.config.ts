@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
     return [
       // Auth
       {
+        source: '/_auth/handler',
+        destination: '/_auth/handler.html'
+      },
+      {
         source: '/:path*',
         destination: 'http://127.0.0.1:9099/:path*',
       },

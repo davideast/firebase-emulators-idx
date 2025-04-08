@@ -40,7 +40,11 @@
         web = {
           command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
           manager = "web";
+          env = {
+            FIREBASE_AUTH_EMULATOR_HOST="localhost:8080";
+          };
         };
+        
       };
     };
   };
