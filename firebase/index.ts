@@ -1,5 +1,5 @@
 import { firebaseConfig } from '@/firebase/config';
-import { initializeApp } from 'firebase/app';
+import { getApps, initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeFirestore, getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 
@@ -24,10 +24,12 @@ export function getFirebase() {
       ssl: true,
       host: firestoreHost,
       ignoreUndefinedProperties: true,
-      experimentalForceLongPolling: true,
+      // experimentalForceLongPolling: true,
     });
     // connectFirestoreEmulator(firestore, window.location.host, 443)
     connectAuthEmulator(auth, window.location.origin);
+    const services = getEnvironment()
+    console.log(services);
     return { firebaseApp, auth, firestore };
   } else {
     const firestore = initializeFirestore(firebaseApp, {
@@ -38,4 +40,29 @@ export function getFirebase() {
     connectFirestoreEmulator(getFirestore(firebaseApp), '127.0.0.1', 8080);
     return { firebaseApp, auth, firestore };
   }
+}
+
+export function getEnvironment() {
+  const app = getApps().at(0) as any;
+  const services = new Map<string, any>();
+  const providerList = ["auth", "firestore"];
+  const providerConfig: Record<string, any> = {
+    "auth": { instanceName: "[DEFAULT]", settings: 'emulatorConfig' },
+    "firestore": { instanceName: "(default)", settings: "_settings" },
+  }
+  for(let [providerKey, provider] of app._container.providers.entries()) {
+    if(providerList.includes(providerKey)) {
+      const instance = provider.instances.get(providerConfig[providerKey].instanceName);
+      const settingsKey = providerConfig[providerKey].settings;
+      const host = instance[settingsKey].host;
+      console.log({ host })
+      const isEmulator = host?.includes('cloudworkstations.dev');
+      const environment = isEmulator ? 'emulator' : 'production';
+      services.set(providerKey, {
+        instance,
+        environment,
+      })
+    }
+  }
+  return services;
 }
