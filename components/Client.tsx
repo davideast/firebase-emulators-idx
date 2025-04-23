@@ -23,6 +23,7 @@ export function Client({ authUrl }: { authUrl: string }) {
       if(user != null) {
         const userDoc = doc(firestore, 'users', user.uid);
         console.log(userDoc.path);
+        console.log('user', user.toJSON())
         setDoc(userDoc, { ...user.toJSON() })
       }
     });
@@ -42,8 +43,8 @@ export function Client({ authUrl }: { authUrl: string }) {
   }, [user, firestore])
 
   async function handleLogin() {
-    signInAnonymously(auth)
-    // signInWithRedirect(auth, new GoogleAuthProvider())
+    // signInAnonymously(auth)
+    signInWithRedirect(auth, new GoogleAuthProvider())
   }
 
   async function handleLogout() {

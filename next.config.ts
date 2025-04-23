@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         destination: '/_auth/handler.html'
       },
       {
+        source: '/google.firestore.v1.Firestore/:path*',
+        destination: 'http://127.0.0.1:8080/google.firestore.v1.Firestore/:path*'
+      },
+      {
         source: '/:path*',
         destination: 'http://127.0.0.1:9099/:path*',
       },
